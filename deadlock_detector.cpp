@@ -36,6 +36,8 @@ public:
     }
 
     void buildGraph() {
+ //  Build Wait-For Graph: P_i → P_k if P_i requests a resource held by P_k
+
         for (int i = 0; i < processes; i++) {
             for (int j = 0; j < resources; j++) {
                 if (request[i][j] == 1) {
@@ -53,6 +55,8 @@ public:
         visited[node] = true;
         recStack[node] = true;
 
+//  If we reach a node already in recursion stack → cycle → deadlock
+
         for (int adj : graph[node]) {
             if (!visited[adj] && dfs(adj))
                 return true;
@@ -65,6 +69,9 @@ public:
     }
 
     bool detectDeadlock() {
+
+//  Start DFS from each unvisited process
+
         for (int i = 0; i < processes; i++) {
             if (!visited[i]) {
                 if (dfs(i))
@@ -86,6 +93,9 @@ public:
 };
 
 int main() {
+
+ //  Display the Wait-For Graph
+
     int p, r;
 
     cout << "Enter Number of Processes: ";
@@ -100,6 +110,9 @@ int main() {
 
     cout << "\nConstructed Wait-For Graph:";
     d.displayGraph();
+
+//  Final check: If a cycle exists → Deadlock
+
 
     if (d.detectDeadlock())
         cout << "\n⚠ DEADLOCK DETECTED! Circular wait exists.\n";
